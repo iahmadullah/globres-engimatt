@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #fafafa; }
+    a { color: #2e8559; text-decoration: none; }
+    a:hover { color: #1a3d28; }
+  </style>
+</helmet>
+
+<!-- ====== NAV ====== -->
+<nav onClick="{{ onNavClick }}" style="position: fixed; top: {{ navInset }}; left: {{ navInset }}; right: {{ navInset }}; z-index: 100; background: {{ navBg }}; backdrop-filter: {{ navBlur }}; -webkit-backdrop-filter: {{ navBlur }}; transition: background 0.3s;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 64px; display: flex; align-items: center; justify-content: space-between; height: 72px;">
+    <sc-if value="{{ showNavLinks }}" hint-placeholder-val="{{ true }}"><img src="./images/logo-white.svg" alt="Engimatt" style="height: 26px; filter: drop-shadow(0 2px 14px rgba(0,0,0,0.35));"></sc-if>
+    <sc-if value="{{ showNavBooking }}" hint-placeholder-val="{{ false }}"><img src="./images/logo-green-black.svg" alt="Engimatt" style="height: 26px;"></sc-if>
+    <sc-if value="{{ showNavLinks }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; align-items: center; gap: 36px; flex-shrink: 0;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: {{ navTextColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;" style-hover="opacity: 0.7">Rooms</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: {{ navTextColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;" style-hover="opacity: 0.7">Restaurant</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: {{ navTextColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;" style-hover="opacity: 0.7">Seminars</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: {{ navTextColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;" style-hover="opacity: 0.7">Our House</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showNavBooking }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); border-radius: 50px; padding: 4px; flex: 1; max-width: 460px; margin: 0 24px;">
+        <div style="flex: 1; padding: 4px 14px; cursor: pointer; border-radius: 50px;" style-hover="background: #fff">
+          <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #767676; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Check-in</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #1a1a1a;">Add date</span>
+        </div>
+        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.08);"></div>
+        <div style="flex: 1; padding: 4px 14px; cursor: pointer; border-radius: 50px;" style-hover="background: #fff">
+          <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #767676; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Check-out</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #1a1a1a;">Add date</span>
+        </div>
+        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.08);"></div>
+        <div style="flex: 0.6; padding: 4px 14px; cursor: pointer; border-radius: 50px;" style-hover="background: #fff">
+          <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #767676; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Guests</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #1a1a1a;">2</span>
+        </div>
+        <div style="width: 36px; height: 36px; background: #2e8559; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;" style-hover="background: #256e49">
+          <span style="color: #ffffff; font-size: 14px;">⌕</span>
+        </div>
+      </div>
+    </sc-if>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px;">
+        <a href="tel:+41443881010" style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: {{ navMutedColor }}; text-shadow: {{ navTextShadow }}; text-decoration: none; white-space: nowrap; height: {{ navPhoneHeight }}; overflow: hidden; transition: height 0.2s;" style-hover="opacity: 0.7"><sc-if value="{{ showNavBooking }}" hint-placeholder-val="{{ false }}">+41 44 388 10 10</sc-if></a>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <sc-if value="{{ showNavExtras }}" hint-placeholder-val="{{ true }}"><span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: {{ navMutedColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;">🇬🇧 EN · CHF</span></sc-if>
+        </div>
+      </div>
+      <button style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; background: {{ navBtnBg }}; color: {{ navBtnColor }}; border: none; padding: 7px 16px; border-radius: 50px; cursor: pointer; white-space: nowrap; transition: background 0.3s, color 0.3s;" style-hover="background: {{ navBtnHoverBg }}">Book Now</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO — Full-width video/image with overlay ====== -->
+<section style="margin: 0; padding: 28px; box-sizing: border-box;">
+  <div style="position: relative; overflow: hidden; border-radius: 28px; min-height: calc(88vh - 56px);">
+  <!-- Video background -->
+  <video ref="{{ videoRef }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" poster="./images/sm-hero-balcony.jpg">
+    <source src="https://videos.pexels.com/video-files/14117676/14117676-uhd_2560_1440_60fps.mp4" type="video/mp4">
+  </video>
+  <!-- Video switcher dots -->
+  <div style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; gap: 12px;">
+    <sc-for list="{{ heroDots }}" as="dot" hint-placeholder-count="3">
+      <div onClick="{{ dot.pick }}" title="{{ dot.label }}" style="width: 3px; height: 22px; border-radius: 2px; background: #ffffff; opacity: {{ dot.opacity }}; box-shadow: 0 0 0 1px rgba(255,255,255,0.3); cursor: pointer;"></div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.1) 100%);"></div>
+  <!-- Content overlay -->
+  <div style="position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 64px; height: calc(88vh - 56px); min-height: 560px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 80px;">
+    <h1 style="font-family: 'Inter', sans-serif; font-size: 64px; font-weight: 600; color: #fff; margin: 0 0 20px; line-height: 1.02; letter-spacing: -2px; max-width: 700px;">Your Green<br>Oasis in Zurich</h1>
+    <p style="font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 400; color: rgba(255,255,255,0.88); margin: 0 0 36px; line-height: 1.7; max-width: 520px;">A boutique-style city + garden hotel, where every room opens to a balcony overlooking the green, minutes from Bahnhofstrasse.</p>
+    <!-- Booking bar in hero -->
+    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; padding: 6px 6px 6px 6px; max-width: 620px; margin-top: 8px;">
+      <div style="flex: 1; padding: 8px 20px; cursor: pointer; border-radius: 50px;" style-hover="background: rgba(255,255,255,0.08)">
+        <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.5px; display: block;">Check-in</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #fff;">Add date</span>
+      </div>
+      <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.15);"></div>
+      <div style="flex: 1; padding: 8px 20px; cursor: pointer; border-radius: 50px;" style-hover="background: rgba(255,255,255,0.08)">
+        <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.5px; display: block;">Check-out</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #fff;">Add date</span>
+      </div>
+      <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.15);"></div>
+      <div style="flex: 0.7; padding: 8px 20px; cursor: pointer; border-radius: 50px;" style-hover="background: rgba(255,255,255,0.08)">
+        <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.5px; display: block;">Guests</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #fff;">2 Adults</span>
+      </div>
+      <div style="height: 44px; background: #fff; border-radius: 50px; padding: 0 20px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0; cursor: pointer;" style-hover="background: #f0f0f0">
+        <span style="color: #1a1a1a; font-size: 16px;">⌕</span><span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap;">Search</span>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+<!-- Perks strip -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 32px 64px;">
+  <div style="display: flex; gap: 32px; padding: 24px 0; border-bottom: 1px solid #eee;">
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #555555; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e8559" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>5% off direct</span>
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #555555; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e8559" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"></polyline><line x1="12" y1="6" x2="12" y2="19"></line></svg>Free upgrade</span>
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #555555; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e8559" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 8a3 3 0 0 1-6 0L8 3z"></path><line x1="12" y1="14" x2="12" y2="21"></line><line x1="9" y1="21" x2="15" y2="21"></line></svg>Welcome drink</span>
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #555555; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e8559" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>2 mins to city center</span>
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #555555; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e8559" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="13" rx="3"></rect><line x1="6" y1="10" x2="18" y2="10"></line><line x1="9" y1="19" x2="7.5" y2="21.5"></line><line x1="15" y1="19" x2="16.5" y2="21.5"></line></svg>1 min to metro</span>
+  </div>
+</section>
+
+<!-- ====== ABOUT (Cyclix bento grid) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  <!-- Top: About text on white + founder video -->
+  <div style="padding: 24px 0 8px; display: grid; grid-template-columns: 1fr 220px; gap: 56px; align-items: center; align-content: center;">
+    <div>
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: #eee; padding: 8px 18px; border-radius: 50px; margin-bottom: 32px;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap;">About us</span>
+      </div>
+      <h2 style="font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 500; color: #1a1a1a; margin: 0; line-height: 1.15; letter-spacing: -1px; max-width: 780px;">United by a love for nature and hospitality, we bring guests together for unforgettable experiences in our <span style="color: #2e8559;">green oasis</span>, a family-run retreat in the heart of Zurich since 1936</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-self: center; margin-top: 100px; margin-left: -40px;">
+      <div style="border-radius: 32px; overflow: hidden; aspect-ratio: 1; width: 100%;">
+        <video ref="{{ playOnMount }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" poster="./images/sm-garden-nature.jpg" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; transform: scale(1.7); transform-origin: 50% 62%; display: block;">
+          <source src="https://videos.pexels.com/video-files/12893525/12893525-uhd_1440_2560_24fps.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #1a1a1a;">Martin Gehrig</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; color: #767676;">Hotel Owner and Founder</span>
+      </div>
+    </div>
+  </div><div onClick="{{ toggleCard }}" style="border-radius: 24px; overflow: hidden; display: grid; grid-template-columns: 1.5fr 1fr; margin-top: 48px; cursor: pointer; transition: all 0.35s;">
+    <!-- Left half -->
+    <div style="background: {{ cardBg }}; display: flex; flex-direction: column; padding: 36px 40px; gap: 24px; border-right: 1px solid rgba(255,255,255,0.15); transition: background 0.35s;">
+      <p style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: #fff; line-height: 1.5; margin: 0;">Our mission is to offer a place where every guest feels at home: a garden retreat in Zurich, run by the same family for over 90 years.</p>
+      <div style="position: relative; border-radius: 16px; overflow: hidden; height: 280px; margin-top: 24px;">
+        <sc-for list="{{ missionImages }}" as="img" hint-placeholder-count="5">
+          <div style="position: absolute; inset: 0; background: url('{{ img.src }}') center/cover no-repeat; opacity: {{ img.opacity }}; transition: opacity 0.9s ease;"></div>
+        </sc-for>
+        <div style="position: absolute; bottom: 14px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px;">
+          <sc-for list="{{ missionImages }}" as="dot" hint-placeholder-count="5">
+            <div onClick="{{ dot.pick }}" style="width: 20px; height: 3px; border-radius: 2px; background: #fff; opacity: {{ dot.dotOpacity }}; cursor: pointer;"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <!-- Right half -->
+    <div style="background: {{ cardBg }}; padding: 44px 40px; display: flex; flex-direction: column; justify-content: space-between; transition: background 0.35s;">
+      <div>
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 34px; font-weight: 600; color: #ffffff; margin: 0 0 12px; line-height: 1.1; letter-spacing: -0.5px;">Book your stay, discover the garden</h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.65); margin: 0 0 28px; line-height: 1.6;">Secure your spot today and experience a unique blend of city life and green tranquility.</p>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <button style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; background: #ffffff; color: #1a1a1a; border: none; padding: 14px 28px; border-radius: 50px; cursor: pointer; white-space: nowrap;" style-hover="background: #e5e5e5">Book now →</button>
+        <div style="display: flex;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-garden-nature.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }};"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hotel-entrance.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-zurich-rooftops.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom row -->
+  
+</section>
+
+
+
+<!-- ====== WHAT WE OFFER / FOR WHO (Cyclix centered style) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  <div style="text-align: center; margin-bottom: 56px;">
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: #eee; padding: 8px 18px; border-radius: 50px;">
+      <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap;">What we offer</span>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: 170px 1fr 170px; gap: 40px; align-items: stretch;">
+    <!-- Left images, staggered -->
+    <div style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977786017-0.jpg') center/cover no-repeat; margin-top: 80px;"></div>
+      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat;"></div>
+    </div>
+    <!-- Center stacked blocks -->
+    <div style="text-align: center;">
+      <div style="padding: 24px 0 36px;">
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 40px; font-weight: 600; color: #1a1a1a; margin: 0 0 20px; letter-spacing: -1px;">Stay in the garden</h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: #767676; line-height: 1.7; margin: 0 auto; max-width: 480px;">Every room opens to its own private balcony over the garden. A quiet green retreat, minutes from Bahnhofstrasse.</p>
+      </div>
+      <div style="border-top: 1px solid #e5e5e5; padding: 36px 0;">
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 40px; font-weight: 600; color: #1a1a1a; margin: 0 0 20px; letter-spacing: -1px;">Leafs seasonal restaurant</h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: #767676; line-height: 1.7; margin: 0 auto; max-width: 480px;">Seasonal cuisine in the winter garden and al fresco on the terrace, open to hotel guests and Zurich locals alike.</p>
+      </div>
+      <div style="border-top: 1px solid #e5e5e5; padding: 36px 0 28px;">
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 40px; font-weight: 600; color: #1a1a1a; margin: 0 0 20px; letter-spacing: -1px;">Business &amp; events</h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: #767676; line-height: 1.7; margin: 0 auto; max-width: 480px;">Modern meeting rooms in a quiet garden setting, plus weddings, banquets, and celebrations staged by our chef.</p>
+      </div>
+      <button style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: #ffffff; border: none; padding: 16px 32px; border-radius: 50px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; margin: 8px 0 64px; background-color: #2E8559" style-hover="background: #256e49">Explore all options <span style="font-size: 17px;">→</span></button>
+    </div>
+    <!-- Right images, staggered -->
+    <div style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
+      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; width: 80%; align-self: flex-end; background: url('./images/sm-seminar-room.jpg') center/cover no-repeat; margin-bottom: 112px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ROOMS (Compact rows) ====== -->
+<section onClick="{{ cycleRoomsBg }}" style="width: 100%; background: {{ roomsBg }}; cursor: pointer; transition: background 0.4s;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  <div style="display: inline-flex; align-items: center; gap: 8px; background: {{ roomsBadgeBg }}; padding: 8px 18px; border-radius: 50px; margin-bottom: 48px;">
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: {{ roomsTextColor }}; white-space: nowrap;">Rooms &amp; Suites</span>
+  </div>
+  <h2 style="font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 48px; letter-spacing: -1px;">Every room with a balcony</h2>
+  <div style="display: flex; flex-direction: column; gap: 0;">
+    <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
+      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat;"></div>
+      <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Classic Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">16 m² · Balcony · Garden view · Nespresso</p></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 190</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
+      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-room-superior.jpg') center/cover no-repeat;"></div>
+      <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Comfort Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">20–24 m² · Balcony · Garden view · Desk</p></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 230</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
+      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977893699-0.jpg') center/cover no-repeat;"></div>
+      <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Superior Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">~30 m² · Seating area · Minibar · Balcony</p></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 270</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; border-bottom: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
+      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
+      <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Relax Suite</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">~35 m² · Separate living · Bathtub · Balcony</p></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 330</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ====== ADVANTAGES (Cyclix numbered layout) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  
+</section>
+
+<!-- ====== TESTIMONIALS (video case studies) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 56px;">
+    <h2 style="font-family: 'Inter', sans-serif; font-size: 52px; font-weight: 600; color: #1a1a1a; margin: 0; line-height: 1.1; letter-spacing: -1.5px; max-width: 820px;">Real guests. Real stays.<br>Real green, zero compromise.</h2>
+    <span style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; color: #1a1a1a; white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px;" style-hover="opacity: 0.6">All guest stories <span style="font-size: 17px;">→</span></span>
+  </div>
+  <div style="border-top: 1px solid #e5e5e5; padding-top: 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px;">
+    <div>
+      <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 24px;">
+        <span style="font-size: 20px; line-height: 1;">🇬🇧</span>
+        <div>
+          <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #1a1a1a; display: block;">Sarah &amp; family</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">3-night city break</span>
+        </div>
+      </div>
+      <video ref="{{ playOnMount }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" poster="./images/sm-zurich-rooftops.jpg" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; display: block; background: #eee;"><source src="https://videos.pexels.com/video-files/3819348/3819348-hd_1920_1080_25fps.mp4" type="video/mp4"></video>
+      <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-style: italic; color: #767676; line-height: 1.6; margin: 20px 0 0;">"Had breakfast on the garden terrace every single morning."</p>
+    </div>
+    <div>
+      <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 24px;">
+        <span style="font-size: 20px; line-height: 1;">🇩🇪</span>
+        <div>
+          <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #1a1a1a; display: block;">Thomas &amp; his team</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">2-day board retreat</span>
+        </div>
+      </div>
+      <video ref="{{ playOnMount }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" poster="./images/sm-seminar-room.jpg" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; display: block; background: #eee;"></video>
+      <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-style: italic; color: #767676; line-height: 1.6; margin: 20px 0 0;">"Ran their retreat in the seminar rooms, five minutes from the business district."</p>
+    </div>
+    <div>
+      <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 24px;">
+        <span style="font-size: 20px; line-height: 1;">🇫🇷</span>
+        <div>
+          <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #1a1a1a; display: block;">Lisa &amp; Philippe</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">Wedding, 60 guests</span>
+        </div>
+      </div>
+      <video ref="{{ playOnMount }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" poster="./images/sm-table-setting.jpg" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; display: block; background: #eee;"><source src="https://videos.pexels.com/video-files/13819067/13819067-uhd_2560_1440_30fps.mp4" type="video/mp4"></video>
+      <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-style: italic; color: #767676; line-height: 1.6; margin: 20px 0 0;">"Celebrated at Leafs, dinner under the trees staged by our chef."</p>
+    </div>
+    <div>
+      <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 24px;">
+        <span style="font-size: 20px; line-height: 1;">🇨🇭</span>
+        <div>
+          <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #1a1a1a; display: block;">Anna &amp; family</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">Weekend stay</span>
+        </div>
+      </div>
+      <video ref="{{ playOnMount }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" poster="./images/sm-winter-garden.jpg" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; display: block; background: #eee;"><source src="https://videos.pexels.com/video-files/10670002/10670002-uhd_2732_1440_25fps.mp4" type="video/mp4"></video>
+      <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-style: italic; color: #767676; line-height: 1.6; margin: 20px 0 0;">"Spent a city weekend with balcony views and the Lindt museum nearby."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FAQ (accordion) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 64px;">
+  <div style="display: inline-flex; align-items: center; gap: 8px; background: #eee; padding: 8px 18px; border-radius: 50px; margin-bottom: 48px;">
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap;">FAQs</span>
+  </div>
+  <div style="border-bottom: 1px solid #e5e5e5;">
+    <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="5">
+      <div style="border-top: 1px solid #e5e5e5;">
+        <div onClick="{{ faq.toggle }}" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 0; cursor: pointer; background: {{ faq.rowBg }}; border-radius: 12px; transition: background 0.2s; margin: 0 -16px; padding-left: 16px; padding-right: 16px;">
+          <span style="font-family: 'Inter', sans-serif; font-size: 30px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.5px;">{{ faq.q }}</span>
+          <div style="width: 44px; height: 44px; background: {{ faq.iconBg }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;"><span style="font-size: 20px; color: {{ faq.iconColor }};">{{ faq.icon }}</span></div>
+        </div>
+        <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ faq.answerColor }}; line-height: 1.7; margin: 0; padding: 0 0 32px 16px; max-width: 720px;">{{ faq.a }}</p>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ====== CTA BANNER (Cyclix image card style) ====== -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 0 64px 80px;">
+  <div style="position: relative; border-radius: 28px; overflow: hidden; min-height: 440px; display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="position: absolute; inset: 0; background: url('./images/ph-1786980772817-0.jpg') center/cover no-repeat;"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.1) 100%);"></div>
+    <h2 style="position: relative; z-index: 1; font-family: 'Inter', sans-serif; font-size: 48px; font-weight: 600; color: #fff; margin: 0; padding: 48px 56px 0; letter-spacing: -1px; max-width: 600px; line-height: 1.05;">Discover your green<br>oasis in Zurich</h2>
+    <div style="position: relative; z-index: 1; padding: 0 56px 48px;">
+      <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: rgba(255,255,255,0.82); margin: 0 0 40px; max-width: 500px;">Book direct for the best rate, a free upgrade, <br>and a welcome drink on us.</p>
+      <button style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; background: #2e8559; color: #ffffff; border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;" style-hover="background: #256e49">Check Availability <span style="font-size: 18px;">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER (Cyclix big-wordmark style) ====== -->
+<footer style="max-width: 100%; overflow: visible; padding: 0; background: #fff;">
+  <div style="max-width: 1360px; margin: 0 auto; padding: 96px 64px 48px; display: grid; grid-template-columns: 1fr 1fr 1fr 1.5fr; gap: 64px;">
+    <div>
+      <h4 style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 20px; letter-spacing: 0.5px;">Hotel</h4>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Rooms</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Our House</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">About Us</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Gallery</span>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 20px; letter-spacing: 0.5px;">Dining</h4>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Leafs Restaurant</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Reserve a Table</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Events</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Seminars</span>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 20px; letter-spacing: 0.5px;">Explore</h4>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">City Trip</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Business</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Packages</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 15px; color: #767676; cursor: pointer;" style-hover="color: #1a1a1a">Jobs</span>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 20px; letter-spacing: 0.5px;">Stay in touch with the garden</h4>
+      <div style="display: flex; align-items: center; background: #f0f0f0; border-radius: 50px; padding: 6px 6px 6px 20px; gap: 8px;">
+        <input type="email" placeholder="Email address" style="font-family: 'Inter', sans-serif; font-size: 15px; color: #1a1a1a; background: transparent; border: none; outline: none; flex: 1; min-width: 0;">
+        <div style="width: 40px; height: 40px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;" style-hover="background: #2e8559"><span style="color: #fff; font-size: 16px;">→</span></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; margin-top: 20px;">
+        <a href="tel:+41443881010" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; text-decoration: none;" style-hover="color: #2e8559">+41 44 388 10 10</a>
+        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #767676; cursor: pointer;">🇬🇧 EN · CHF</span>
+      </div>
+    </div>
+  </div>
+  <!-- Big wordmark -->
+  <div style="padding: 32px 0 0; overflow: visible; margin: 0 -12px;">
+    <img src="./images/logo-wordmark-black.svg" alt="Engimatt" style="width: 102%; max-width: 102%; opacity: 0.95; display: block;">
+  </div>
+  <!-- Bottom bar -->
+  <div style="max-width: 1360px; margin: 0 auto; padding: 32px 64px 48px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e5e5; margin-top: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">Engimattstrasse 14, 8002 Zürich</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494;">© 2026 Engimatt City &amp; Garden Hotel. All rights reserved.</span>
+    </div>
+    <div style="display: flex; gap: 20px;">
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494; cursor: pointer;" style-hover="color: #1a1a1a">Instagram</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494; cursor: pointer;" style-hover="color: #1a1a1a">Facebook</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494; cursor: pointer;" style-hover="color: #1a1a1a">Privacy</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: #949494; cursor: pointer;" style-hover="color: #1a1a1a">Terms</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ====== FLOATING AI SEARCH BAR ====== -->
+<sc-if value="{{ showFloatingBar }}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 150; width: 100%; max-width: 440px; padding: 0 24px;">
+  <div onClick="{{ openChat }}" style="background: rgba(250,250,250,0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.06); border-radius: 50px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); cursor: pointer;" style-hover="border-color: rgba(0,0,0,0.15)">
+    <div style="width: 32px; height: 32px; flex-shrink: 0; background: #2e8559; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><img src="./images/logo-symbol-green.svg" alt="" style="height: 18px; filter: brightness(10);"></div>
+    <span style="font-family: 'Inter', sans-serif; font-size: 14px; color: #767676; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; text-align: left;">{{ placeholderText }}</span>
+    <div style="width: 40px; height: 40px; background: rgba(0,0,0,0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #767676; font-size: 16px;">→</span></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ====== FLOATING AI CHAT ====== -->
+<sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200; width: 380px; background: rgba(20,20,20,0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-radius: 24px; box-shadow: 0 8px 48px rgba(0,0,0,0.3); overflow: hidden; border: 1px solid rgba(255,255,255,0.08);">
+    <div style="padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; background: #2e8559; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><img src="./images/logo-symbol-green.svg" alt="" style="height: 18px; filter: brightness(10);"></div>
+        <div><span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #fff;">Engimatt Concierge</span><br><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: rgba(255,255,255,0.35);">AI-powered</span></div>
+      </div>
+      <span onClick="{{ closeChat }}" style="color: rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; padding: 4px 8px;" style-hover="color: rgba(255,255,255,0.7)">✕</span>
+    </div>
+    <div style="padding: 20px;">
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; background: #2e8559; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><img src="./images/logo-symbol-green.svg" alt="" style="height: 14px; filter: brightness(10);"></div>
+        <div style="background: rgba(255,255,255,0.06); border-radius: 16px 16px 16px 4px; padding: 12px 16px;">
+          <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; margin: 0;">Welcome! Ask about rooms, dining, events, or your stay.</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="background: rgba(255,255,255,0.08)"><span style="font-size: 13px;">📅</span><span style="font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,0.4);">Board meeting, 15 people</span></div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="background: rgba(255,255,255,0.08)"><span style="font-size: 13px;">🍽</span><span style="font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,0.4);">Table for 4, Thursday</span></div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="background: rgba(255,255,255,0.08)"><span style="font-size: 13px;">💒</span><span style="font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,0.4);">Garden wedding, 60 guests</span></div>
+      </div>
+    </div>
+    <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px;">
+      <div style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.06); border-radius: 50px; padding: 10px 16px;"><span style="font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.25);">{{ placeholderText }}</span></div>
+      <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;" style-hover="background: rgba(255,255,255,0.15)"><span style="color: rgba(255,255,255,0.4); font-size: 16px;">→</span></div>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;1440px&quot;}}">
+class Component extends DCLogic {
+  state = { scrolled: false, placeholderIdx: 0, chatOpen: false, videoIdx: 0, offerOpen: 0, faqOpen: -1, cardDark: false, missionIdx: 0, navCompact: false, roomsTheme: 0 };
+  _roomsThemes = [
+    { bg: 'transparent', text: '#1a1a1a', badge: '#eee', border: '#e5e5e5', muted: '#767676' },
+    { bg: '#1a1a1a', text: '#ffffff', badge: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.12)', muted: 'rgba(255,255,255,0.6)' },
+    { bg: '#2e8559', text: '#ffffff', badge: 'rgba(255,255,255,0.15)', border: 'rgba(255,255,255,0.2)', muted: 'rgba(255,255,255,0.75)' },
+  ];
+  _missionImages = [
+    './images/ph-1786973861464-0.jpg',
+    './images/ph-1786978369170-0.jpg',
+    './images/sm-room-superior.jpg',
+    './images/ph-1786978450372-0.jpg',
+    './images/ph-1786978539755-0.jpg',
+  ];
+  _faqs = [
+    { q: 'When can I check in and out?', a: 'Check-in is from 3:00 pm and check-out until 11:00 am. Early arrival and late departure are possible on request, subject to availability.' },
+    { q: 'Is breakfast included?', a: 'Our garden breakfast buffet is included in most direct-booking rates and served from 6:30 am, on the terrace in summer.' },
+    { q: 'Do you have parking and EV charging?', a: 'Yes, on-site parking with EV charging stations can be reserved with your booking.' },
+    { q: 'Are pets welcome?', a: 'Well-behaved dogs are welcome for a small nightly fee. Just let us know when booking.' },
+    { q: 'How do I reach the city center?', a: 'Bahnhofstrasse is around 5 min by tram, or 17 min by S-Bahn according to the hotel.' },
+  ];
+  _offers = [
+    { title: 'Private garden & terrace dining', img: './images/sm-garden-nature.jpg', audience: 'Perfect for city travelers', desc: 'A rare green retreat in central Zurich. Dine al fresco under the trees and enjoy the quiet, minutes from Bahnhofstrasse.' },
+    { title: 'Balcony rooms with garden views', img: './images/sm-hero-balcony.jpg', audience: 'Perfect for leisure stays & families', desc: 'Every room opens to its own private balcony over the garden. Wake up to birdsong in the middle of the city.' },
+    { title: 'Leafs seasonal restaurant', img: './images/sm-leafs-restaurant.jpg', audience: 'Perfect for foodies & locals', desc: 'Seasonal cuisine served in the winter garden and on the terrace, open to hotel guests and Zurich locals alike.' },
+    { title: 'Seminar & event spaces', img: './images/sm-seminar-room.jpg', audience: 'Perfect for business & celebrations', desc: 'Modern meeting rooms in a quiet garden setting for fresh thinking, plus weddings, banquets, and private celebrations staged by our chef.' },
+  ];
+  _videos = [
+    { label: 'Aerial park garden', src: 'https://videos.pexels.com/video-files/14117676/14117676-uhd_2560_1440_60fps.mp4' },
+    { label: 'Aerial rooftops & greenery', src: 'https://videos.pexels.com/video-files/9431498/9431498-uhd_2560_1440_24fps.mp4' },
+    { label: 'Forest canopy', src: 'https://videos.pexels.com/video-files/31454305/13413395_2732_1440_25fps.mp4' },
+    { label: 'Skateboarding in the park', src: 'https://videos.pexels.com/video-files/7934472/7934472-uhd_2732_1440_25fps.mp4' },
+  ];
+  _placeholders = [
+    "Sept 15–16, board meeting, 15 people, 1 night…",
+    "Table for 4, Thursday dinner, garden terrace…",
+    "Family of 4, weekend city trip, what's nearby?",
+    "Wedding reception for 60, garden setting…",
+    "Do you have rooms with a view for next Saturday?",
+    "Is breakfast included? What time does it start?",
+    "Can I book the tennis court for tomorrow morning?",
+  ];
+  componentDidMount() {
+    this._onScroll = () => {
+      const s = window.scrollY > 300;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._timer = setInterval(() => {
+      this.setState(s => ({ placeholderIdx: (s.placeholderIdx + 1) % this._placeholders.length }));
+    }, 3000);
+    this._missionTimer = setInterval(() => {
+      this.setState(s => ({ missionIdx: (s.missionIdx + 1) % this._missionImages.length }));
+    }, 3500);
+    if (this._videoRef && this._videoRef.current) this._videoRef.current.play().catch(() => {});
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    clearInterval(this._timer);
+    clearInterval(this._missionTimer);
+  }
+  renderVals() {
+    const s = this.state.scrolled;
+    return {
+      showNavLinks: !s,
+      showNavBooking: s,
+      navBg: s ? 'rgba(250,250,250,0.8)' : 'transparent',
+      navInset: s ? '0' : '28px',
+      navBlur: s ? 'blur(24px)' : 'none',
+      navTextShadow: s ? 'none' : '0 2px 18px rgba(0,0,0,0.35)',
+      navBtnBg: s ? '#2e8559' : '#ffffff',
+      navBtnColor: s ? '#ffffff' : '#1a1a1a',
+      navBtnHoverBg: s ? '#256e49' : '#f0f0f0',
+      navTextColor: s ? '#1a1a1a' : '#fff',
+      navMutedColor: s ? '#767676' : '#ffffff',
+      navPhoneHeight: s && !this.state.navCompact ? '16px' : '0px',
+      showNavExtras: s ? !this.state.navCompact : true,
+      onNavClick: (e) => {
+        if (!s) return;
+        if (e.target.closest('button, a, input')) return;
+        this.setState(st => ({ navCompact: !st.navCompact }));
+      },
+      showFloatingBar: s,
+      videoRef: this._videoRef || (this._videoRef = React.createRef()),
+      playOnMount: (el) => { if (el) el.play().catch(() => {}); },
+      roomsBg: this._roomsThemes[this.state.roomsTheme].bg,
+      roomsTextColor: this._roomsThemes[this.state.roomsTheme].text,
+      roomsBadgeBg: this._roomsThemes[this.state.roomsTheme].badge,
+      roomsBorderColor: this._roomsThemes[this.state.roomsTheme].border,
+      roomsMutedColor: this._roomsThemes[this.state.roomsTheme].muted,
+      cycleRoomsBg: (e) => {
+        if (e.target.closest('a, button')) return;
+        this.setState(st => ({ roomsTheme: (st.roomsTheme + 1) % 3 }));
+      },
+      cardBg: this.state.cardDark ? '#1a1a1a' : '#2e8559',
+      toggleCard: () => this.setState(s => ({ cardDark: !s.cardDark })),
+      missionImages: this._missionImages.map((src, i) => ({
+        src, opacity: i === this.state.missionIdx ? 1 : 0,
+        dotOpacity: i === this.state.missionIdx ? 1 : 0.35,
+        pick: () => this.setState({ missionIdx: i }),
+      })),
+      faqs: this._faqs.map((f, i) => {
+        const open = this.state.faqOpen === i;
+        return { ...f, open, icon: open ? '−' : '+', iconBg: open ? '#fff' : '#eee', iconColor: open ? '#2e8559' : '#666',
+          rowBg: open ? '#2e8559' : 'transparent',
+          answerColor: open ? 'rgba(255,255,255,0.85)' : '#767676',
+          toggle: () => this.setState({ faqOpen: open ? -1 : i }) };
+      }),
+
+      heroDots: this._videos.map((v, i) => ({
+        label: v.label,
+        opacity: i === this.state.videoIdx ? 1 : 0.35,
+        pick: () => {
+          this.setState({ videoIdx: i });
+          const el = this._videoRef && this._videoRef.current;
+          if (el && !el.src.includes(this._videos[i].src)) { el.src = this._videos[i].src; el.play(); }
+        },
+      })),
+      placeholderText: this._placeholders[this.state.placeholderIdx],
+      chatOpen: this.state.chatOpen,
+      chatClosed: !this.state.chatOpen,
+      openChat: () => this.setState({ chatOpen: true }),
+      closeChat: () => this.setState({ chatOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

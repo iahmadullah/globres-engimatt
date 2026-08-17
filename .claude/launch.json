@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "globres-static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/ahmad.ullah/Downloads/Globres/.claude/serve.js"],
+      "port": 4321
+    }
+  ]
+}
