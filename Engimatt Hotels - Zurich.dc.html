@@ -314,13 +314,15 @@
   <div style="border-bottom: 1px solid #e5e5e5;">
     <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="5">
       <div style="border-top: 1px solid #e5e5e5;">
-        <div onClick="{{ faq.toggle }}" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 0; cursor: pointer; background: {{ faq.rowBg }}; border-radius: 12px; transition: background 0.2s; margin: 0 -16px; padding-left: 16px; padding-right: 16px;">
-          <span style="font-family: 'Inter', sans-serif; font-size: 30px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.5px;">{{ faq.q }}</span>
-          <div style="width: 44px; height: 44px; background: {{ faq.iconBg }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;"><span style="font-size: 20px; color: {{ faq.iconColor }};">{{ faq.icon }}</span></div>
+        <div style="background: {{ faq.rowBg }}; border-radius: 12px; margin: 0 -16px; padding: 0 16px; transition: background 0.2s;">
+          <div onClick="{{ faq.toggle }}" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 0; cursor: pointer;">
+            <span style="font-family: 'Inter', sans-serif; font-size: 30px; font-weight: 600; color: {{ faq.qColor }}; letter-spacing: -0.5px;">{{ faq.q }}</span>
+            <div style="width: 44px; height: 44px; background: {{ faq.iconBg }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;"><span style="font-size: 20px; color: {{ faq.iconColor }};">{{ faq.icon }}</span></div>
+          </div>
+          <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
+            <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ faq.answerColor }}; line-height: 1.7; margin: 0; padding: 0 0 32px 0; max-width: 720px;">{{ faq.a }}</p>
+          </sc-if>
         </div>
-        <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
-          <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ faq.answerColor }}; line-height: 1.7; margin: 0; padding: 0 0 32px 16px; max-width: 720px;">{{ faq.a }}</p>
-        </sc-if>
       </div>
     </sc-for>
   </div>
@@ -549,7 +551,8 @@ class Component extends DCLogic {
         const open = this.state.faqOpen === i;
         return { ...f, open, icon: open ? '−' : '+', iconBg: open ? '#fff' : '#eee', iconColor: open ? '#2e8559' : '#666',
           rowBg: open ? '#2e8559' : 'transparent',
-          answerColor: open ? 'rgba(255,255,255,0.85)' : '#767676',
+          qColor: open ? '#ffffff' : '#1a1a1a',
+          answerColor: 'rgba(255,255,255,0.9)',
           toggle: () => this.setState({ faqOpen: open ? -1 : i }) };
       }),
 
