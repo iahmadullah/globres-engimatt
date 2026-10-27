@@ -11,8 +11,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
   <style>
     body { margin: 0; background: #fafafa; }
-    a { color: #2e8559; text-decoration: none; }
+    a { color: #2e8559; text-decoration: none; transition: color 0.22s ease, opacity 0.22s ease; }
     a:hover { color: #1a3d28; }
+
+    /* Micro-interactions. The runtime gives every element carrying a style-hover
+       a .scpN class, so one rule eases all of them instead of snapping. */
+    [class*="scp"] {
+      transition: background 0.28s ease, color 0.22s ease, opacity 0.22s ease,
+                  transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+                  box-shadow 0.28s ease, border-color 0.22s ease, filter 0.28s ease;
+    }
+    button { transition: background 0.28s ease, color 0.22s ease, transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease; }
+    button:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.13); }
+    button:active { transform: translateY(0) scale(0.98); box-shadow: none; }
+    input::placeholder { transition: opacity 0.22s ease; }
+    input:focus::placeholder { opacity: 0.45; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      button:hover { transform: none; }
+    }
   </style>
 </helmet>
 
@@ -54,7 +72,34 @@
       <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px;">
         <a href="tel:+41443881010" style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: {{ navMutedColor }}; text-shadow: {{ navTextShadow }}; text-decoration: none; white-space: nowrap; height: {{ navPhoneHeight }}; overflow: hidden; transition: height 0.2s;" style-hover="opacity: 0.7"><sc-if value="{{ showNavBooking }}" hint-placeholder-val="{{ false }}">+41 44 388 10 10</sc-if></a>
         <div style="display: flex; align-items: center; gap: 10px;">
-          <sc-if value="{{ showNavExtras }}" hint-placeholder-val="{{ true }}"><span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: {{ navMutedColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;">🇬🇧 EN · CHF</span></sc-if>
+          <sc-if value="{{ showNavExtras }}" hint-placeholder-val="{{ true }}">
+            <div data-locale-picker="1" style="position: relative;">
+              <span onClick="{{ toggleNavPicker }}" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: {{ navMutedColor }}; text-shadow: {{ navTextShadow }}; cursor: pointer; white-space: nowrap;" style-hover="opacity: 0.7">{{ localeLabel }}</span>
+              <sc-if value="{{ navPickerOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; top: calc(100% + 16px); right: 0; width: 332px; background: #ffffff; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.18); padding: 16px; display: flex; gap: 12px; z-index: 200; text-shadow: none; cursor: default;">
+                  <div style="flex: 1; min-width: 0;">
+                    <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.6px; display: block; padding: 0 10px 8px;">Language</span>
+                    <sc-for list="{{ languages }}" as="lang" hint-placeholder-count="5">
+                      <div onClick="{{ lang.pick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 10px; cursor: pointer; background: {{ lang.bg }};" style-hover="background: #f4f4f4">
+                        <span style="font-size: 14px; line-height: 1;">{{ lang.flag }}</span>
+                        <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: {{ lang.weight }}; color: {{ lang.color }}; white-space: nowrap;">{{ lang.label }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="width: 1px; background: #eeeeee; flex-shrink: 0;"></div>
+                  <div style="flex: 1; min-width: 0;">
+                    <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.6px; display: block; padding: 0 10px 8px;">Currency</span>
+                    <sc-for list="{{ currencies }}" as="curr" hint-placeholder-count="4">
+                      <div onClick="{{ curr.pick }}" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 10px; cursor: pointer; background: {{ curr.bg }};" style-hover="background: #f4f4f4">
+                        <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: {{ curr.weight }}; color: {{ curr.color }}; white-space: nowrap;">{{ curr.code }}</span>
+                        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #9a9a9a; white-space: nowrap;">{{ curr.symbol }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
         </div>
       </div>
       <button style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; background: {{ navBtnBg }}; color: {{ navBtnColor }}; border: none; padding: 7px 16px; border-radius: 50px; cursor: pointer; white-space: nowrap; transition: background 0.3s, color 0.3s;" style-hover="background: {{ navBtnHoverBg }}">Book Now</button>
@@ -72,7 +117,7 @@
   <!-- Video switcher dots -->
   <div style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; gap: 12px;">
     <sc-for list="{{ heroDots }}" as="dot" hint-placeholder-count="3">
-      <div onClick="{{ dot.pick }}" title="{{ dot.label }}" style="width: 3px; height: 22px; border-radius: 2px; background: #ffffff; opacity: {{ dot.opacity }}; box-shadow: 0 0 0 1px rgba(255,255,255,0.3); cursor: pointer;"></div>
+      <div onClick="{{ dot.pick }}" title="{{ dot.label }}" style-hover="opacity: 1; transform: scaleY(1.45)" style="width: 3px; height: 22px; border-radius: 2px; background: #ffffff; opacity: {{ dot.opacity }}; box-shadow: 0 0 0 1px rgba(255,255,255,0.3); cursor: pointer;"></div>
     </sc-for>
   </div>
   <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.1) 100%);"></div>
@@ -145,7 +190,7 @@
         </sc-for>
         <div style="position: absolute; bottom: 14px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px;">
           <sc-for list="{{ missionImages }}" as="dot" hint-placeholder-count="5">
-            <div onClick="{{ dot.pick }}" style="width: 20px; height: 3px; border-radius: 2px; background: #fff; opacity: {{ dot.dotOpacity }}; cursor: pointer;"></div>
+            <div onClick="{{ dot.pick }}" style-hover="opacity: 1; transform: scaleY(2)" style="width: 20px; height: 3px; border-radius: 2px; background: #fff; opacity: {{ dot.dotOpacity }}; cursor: pointer;"></div>
           </sc-for>
         </div>
       </div>
@@ -159,11 +204,11 @@
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <button style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; background: #ffffff; color: #1a1a1a; border: none; padding: 14px 28px; border-radius: 50px; cursor: pointer; white-space: nowrap;" style-hover="background: #e5e5e5">Book now →</button>
         <div style="display: flex;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-garden-nature.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }};"></div>
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hotel-entrance.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-zurich-rooftops.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style-hover="transform: translateY(-4px)" style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-garden-nature.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }};"></div>
+          <div style-hover="transform: translateY(-4px)" style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style-hover="transform: translateY(-4px)" style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-hotel-entrance.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style-hover="transform: translateY(-4px)" style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
+          <div style-hover="transform: translateY(-4px)" style="width: 36px; height: 36px; border-radius: 50%; background: url('./images/sm-zurich-rooftops.jpg') center/cover no-repeat; border: 3px solid {{ cardBg }}; margin-left: -10px;"></div>
         </div>
       </div>
     </div>
@@ -184,8 +229,8 @@
   <div style="display: grid; grid-template-columns: 170px 1fr 170px; gap: 40px; align-items: stretch;">
     <!-- Left images, staggered -->
     <div style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977786017-0.jpg') center/cover no-repeat; margin-top: 80px;"></div>
-      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.03)" style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977786017-0.jpg') center/cover no-repeat; margin-top: 80px;"></div>
+      <div style-hover="transform: scale(1.03)" style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/sm-leafs-restaurant.jpg') center/cover no-repeat;"></div>
     </div>
     <!-- Center stacked blocks -->
     <div style="text-align: center;">
@@ -205,8 +250,8 @@
     </div>
     <!-- Right images, staggered -->
     <div style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
-      <div style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; width: 80%; align-self: flex-end; background: url('./images/sm-seminar-room.jpg') center/cover no-repeat; margin-bottom: 112px;"></div>
+      <div style-hover="transform: scale(1.03)" style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.03)" style="border-radius: 18px; overflow: hidden; aspect-ratio: 1; width: 80%; align-self: flex-end; background: url('./images/sm-seminar-room.jpg') center/cover no-repeat; margin-bottom: 112px;"></div>
     </div>
   </div>
 </section>
@@ -220,28 +265,28 @@
   <h2 style="font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 48px; letter-spacing: -1px;">Every room with a balcony</h2>
   <div style="display: flex; flex-direction: column; gap: 0;">
     <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
-      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.16)" style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-hero-balcony.jpg') center/cover no-repeat;"></div>
       <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Classic Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">16 m² · Balcony · Garden view · Nespresso</p></div>
-      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 190</span></div>
-      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">{{ priceClassic }}</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff; transform: scale(1.12)"><span style="font-size: 16px;">→</span></div>
     </div>
     <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
-      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-room-superior.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.16)" style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/sm-room-superior.jpg') center/cover no-repeat;"></div>
       <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Comfort Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">20–24 m² · Balcony · Garden view · Desk</p></div>
-      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 230</span></div>
-      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">{{ priceComfort }}</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff; transform: scale(1.12)"><span style="font-size: 16px;">→</span></div>
     </div>
     <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
-      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977893699-0.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.16)" style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977893699-0.jpg') center/cover no-repeat;"></div>
       <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Superior Room</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">~30 m² · Seating area · Minibar · Balcony</p></div>
-      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 270</span></div>
-      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">{{ priceSuperior }}</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff; transform: scale(1.12)"><span style="font-size: 16px;">→</span></div>
     </div>
     <div style="display: flex; align-items: center; gap: 28px; padding: 24px 0; border-top: 1px solid {{ roomsBorderColor }}; border-bottom: 1px solid {{ roomsBorderColor }}; cursor: pointer;" style-hover="background: rgba(0,0,0,0.02)">
-      <div style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
+      <div style-hover="transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.16)" style="width: 140px; height: 96px; flex-shrink: 0; border-radius: 16px; background: url('./images/ph-1786977958755-0.jpg') center/cover no-repeat;"></div>
       <div style="flex: 1;"><h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }}; margin: 0 0 4px;">Relax Suite</h3><p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ roomsMutedColor }}; margin: 0;">~35 m² · Separate living · Bathtub · Balcony</p></div>
-      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">CHF 330</span></div>
-      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff"><span style="font-size: 16px;">→</span></div>
+      <div style="text-align: right; flex-shrink: 0;"><span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ roomsMutedColor }}; display: block;">from</span><span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; color: {{ roomsTextColor }};">{{ priceSuite }}</span></div>
+      <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" style-hover="background: #2e8559; color: #ffffff; transform: scale(1.12)"><span style="font-size: 16px;">→</span></div>
     </div>
   </div>
 </div>
@@ -314,7 +359,7 @@
   <div style="border-bottom: 1px solid #e5e5e5;">
     <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="5">
       <div style="border-top: 1px solid #e5e5e5;">
-        <div style="background: {{ faq.rowBg }}; border-radius: 12px; margin: 0 -16px; padding: 0 16px; transition: background 0.2s;">
+        <div style-hover="background: {{ faq.hoverBg }}" style="background: {{ faq.rowBg }}; border-radius: 12px; margin: 0 -16px; padding: 0 16px; transition: background 0.2s;">
           <div onClick="{{ faq.toggle }}" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 0; cursor: pointer;">
             <span style="font-family: 'Inter', sans-serif; font-size: 30px; font-weight: 600; color: {{ faq.qColor }}; letter-spacing: -0.5px;">{{ faq.q }}</span>
             <div style="width: 44px; height: 44px; background: {{ faq.iconBg }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;"><span style="font-size: 20px; color: {{ faq.iconColor }};">{{ faq.icon }}</span></div>
@@ -379,7 +424,32 @@
       </div>
       <div style="display: flex; align-items: center; gap: 16px; margin-top: 20px;">
         <a href="tel:+41443881010" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; text-decoration: none;" style-hover="color: #2e8559">+41 44 388 10 10</a>
-        <span style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #767676; cursor: pointer;">🇬🇧 EN · CHF</span>
+        <div data-locale-picker="1" style="position: relative;">
+          <span onClick="{{ toggleFooterPicker }}" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #767676; cursor: pointer; white-space: nowrap;" style-hover="color: #2e8559">{{ localeLabel }}</span>
+          <sc-if value="{{ footerPickerOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; bottom: calc(100% + 16px); left: 0; width: 332px; background: #ffffff; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.18); padding: 16px; display: flex; gap: 12px; z-index: 200; text-shadow: none; cursor: default;">
+              <div style="flex: 1; min-width: 0;">
+                <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.6px; display: block; padding: 0 10px 8px;">Language</span>
+                <sc-for list="{{ languages }}" as="lang" hint-placeholder-count="5">
+                  <div onClick="{{ lang.pick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 10px; cursor: pointer; background: {{ lang.bg }};" style-hover="background: #f4f4f4">
+                    <span style="font-size: 14px; line-height: 1;">{{ lang.flag }}</span>
+                    <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: {{ lang.weight }}; color: {{ lang.color }}; white-space: nowrap;">{{ lang.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="width: 1px; background: #eeeeee; flex-shrink: 0;"></div>
+              <div style="flex: 1; min-width: 0;">
+                <span style="font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.6px; display: block; padding: 0 10px 8px;">Currency</span>
+                <sc-for list="{{ currencies }}" as="curr" hint-placeholder-count="4">
+                  <div onClick="{{ curr.pick }}" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 10px; cursor: pointer; background: {{ curr.bg }};" style-hover="background: #f4f4f4">
+                    <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: {{ curr.weight }}; color: {{ curr.color }}; white-space: nowrap;">{{ curr.code }}</span>
+                    <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #9a9a9a; white-space: nowrap;">{{ curr.symbol }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
       </div>
     </div>
   </div>
@@ -447,7 +517,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;1440px&quot;}}">
 class Component extends DCLogic {
-  state = { scrolled: false, placeholderIdx: 0, chatOpen: false, videoIdx: 0, offerOpen: 0, faqOpen: -1, cardDark: false, missionIdx: 0, navCompact: false, roomsTheme: 0 };
+  state = { scrolled: false, placeholderIdx: 0, chatOpen: false, videoIdx: 0, offerOpen: 0, faqOpen: -1, cardDark: false, missionIdx: 0, navCompact: false, roomsTheme: 0, lang: 'en', currency: 'CHF', localePicker: null };
   _roomsThemes = [
     { bg: 'transparent', text: '#1a1a1a', badge: '#eee', border: '#e5e5e5', muted: '#767676' },
     { bg: '#1a1a1a', text: '#ffffff', badge: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.12)', muted: 'rgba(255,255,255,0.6)' },
@@ -479,6 +549,21 @@ class Component extends DCLogic {
     { label: 'Forest canopy', src: 'https://videos.pexels.com/video-files/31454305/13413395_2732_1440_25fps.mp4' },
     { label: 'Skateboarding in the park', src: 'https://videos.pexels.com/video-files/7934472/7934472-uhd_2732_1440_25fps.mp4' },
   ];
+  _languages = [
+    { code: 'en', flag: '🇬🇧', short: 'EN', label: 'English' },
+    { code: 'de', flag: '🇩🇪', short: 'DE', label: 'Deutsch' },
+    { code: 'fr', flag: '🇫🇷', short: 'FR', label: 'Français' },
+    { code: 'it', flag: '🇮🇹', short: 'IT', label: 'Italiano' },
+    { code: 'es', flag: '🇪🇸', short: 'ES', label: 'Español' },
+  ];
+  // Indicative static rates against CHF — swap for a live FX feed before this goes near real bookings.
+  _currencies = [
+    { code: 'CHF', symbol: 'Fr.', rate: 1 },
+    { code: 'EUR', symbol: '€', rate: 1.07 },
+    { code: 'USD', symbol: '$', rate: 1.24 },
+    { code: 'GBP', symbol: '£', rate: 0.92 },
+  ];
+  _roomPrices = { priceClassic: 190, priceComfort: 230, priceSuperior: 270, priceSuite: 330 };
   _placeholders = [
     "Sept 15–16, board meeting, 15 people, 1 night…",
     "Table for 4, Thursday dinner, garden terrace…",
@@ -494,6 +579,12 @@ class Component extends DCLogic {
       if (s !== this.state.scrolled) this.setState({ scrolled: s });
     };
     window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onDocClick = (e) => {
+      if (!this.state.localePicker) return;
+      if (e.target.closest && e.target.closest('[data-locale-picker]')) return;
+      this.setState({ localePicker: null });
+    };
+    document.addEventListener('click', this._onDocClick);
     this._timer = setInterval(() => {
       this.setState(s => ({ placeholderIdx: (s.placeholderIdx + 1) % this._placeholders.length }));
     }, 3000);
@@ -504,11 +595,20 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this._onScroll);
+    document.removeEventListener('click', this._onDocClick);
     clearInterval(this._timer);
     clearInterval(this._missionTimer);
   }
   renderVals() {
     const s = this.state.scrolled;
+    const lang = this._languages.find(l => l.code === this.state.lang) || this._languages[0];
+    const cur = this._currencies.find(c => c.code === this.state.currency) || this._currencies[0];
+    // 'from' prices stay round after conversion
+    const prices = {};
+    for (const key in this._roomPrices) {
+      const v = Math.round(this._roomPrices[key] * cur.rate / 5) * 5;
+      prices[key] = cur.code === 'CHF' ? 'CHF ' + v : cur.symbol + ' ' + v;
+    }
     return {
       showNavLinks: !s,
       showNavBooking: s,
@@ -525,10 +625,29 @@ class Component extends DCLogic {
       showNavExtras: s ? !this.state.navCompact : true,
       onNavClick: (e) => {
         if (!s) return;
-        if (e.target.closest('button, a, input')) return;
+        if (e.target.closest('button, a, input, [data-locale-picker]')) return;
         this.setState(st => ({ navCompact: !st.navCompact }));
       },
       showFloatingBar: s,
+      localeLabel: lang.flag + ' ' + lang.short + ' · ' + cur.code,
+      navPickerOpen: this.state.localePicker === 'nav',
+      footerPickerOpen: this.state.localePicker === 'footer',
+      toggleNavPicker: () => this.setState(st => ({ localePicker: st.localePicker === 'nav' ? null : 'nav' })),
+      toggleFooterPicker: () => this.setState(st => ({ localePicker: st.localePicker === 'footer' ? null : 'footer' })),
+      languages: this._languages.map(l => {
+        const on = l.code === this.state.lang;
+        return { ...l, bg: on ? '#eef5f1' : 'transparent', color: on ? '#2e8559' : '#1a1a1a', weight: on ? 600 : 500,
+          pick: () => {
+            document.documentElement.lang = l.code;
+            this.setState({ lang: l.code, localePicker: null });
+          } };
+      }),
+      currencies: this._currencies.map(c => {
+        const on = c.code === this.state.currency;
+        return { ...c, bg: on ? '#eef5f1' : 'transparent', color: on ? '#2e8559' : '#1a1a1a', weight: on ? 600 : 500,
+          pick: () => this.setState({ currency: c.code, localePicker: null }) };
+      }),
+      ...prices,
       videoRef: this._videoRef || (this._videoRef = React.createRef()),
       playOnMount: (el) => { if (el) el.play().catch(() => {}); },
       roomsBg: this._roomsThemes[this.state.roomsTheme].bg,
@@ -551,6 +670,7 @@ class Component extends DCLogic {
         const open = this.state.faqOpen === i;
         return { ...f, open, icon: open ? '−' : '+', iconBg: open ? '#fff' : '#eee', iconColor: open ? '#2e8559' : '#666',
           rowBg: open ? '#2e8559' : 'transparent',
+          hoverBg: open ? '#2e8559' : '#f2f2f2',
           qColor: open ? '#ffffff' : '#1a1a1a',
           answerColor: 'rgba(255,255,255,0.9)',
           toggle: () => this.setState({ faqOpen: open ? -1 : i }) };
